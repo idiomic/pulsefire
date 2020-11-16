@@ -6,10 +6,7 @@
     </include>
     <include>
       <uri>model://bot</uri>
-      <pose>0 0 0 0 0 0</pose>
-    </include>
-    <include>
-      <uri>model://groundplane</uri>
+      <pose>17 18 0 0 0 0</pose>
     </include>
     <include>
       <uri>model://willowgarage</uri>
