@@ -1955,7 +1955,7 @@
       </collision>
     </link>
     <link name='sensors'>
-      <pose>-0.104455 -0.001528 0.306312 0 -0 0</pose>
+      <pose>-0.104455 -0.001528 0.306312 3.14 -0 3.14</pose>
       <inertial>
         <mass>0.0921352</mass>
         <inertia>
@@ -1966,40 +1966,38 @@
           <ixz>0</ixz>
           <iyz>0</iyz>
         </inertia>
-        <pose>0 0 0 0 -0 0</pose>
       </inertial>
-      <sensor name='head_hokuyo_sensor' type='ray'>
-        <always_on>1</always_on>
-        <update_rate>30</update_rate>
+      <sensor name='lidar' type='ray'>
+        <always_on>true</always_on>
+        <update_rate>10</update_rate>
         <visualize>0</visualize>
         <ray>
           <scan>
             <horizontal>
-              <samples>200</samples>
+              <samples>300</samples>
               <resolution>1</resolution>
-              <min_angle>-1.57</min_angle>
-              <max_angle>1.57</max_angle>
+              <min_angle>-1.6</min_angle>
+              <max_angle>1.6</max_angle>
             </horizontal>
             <vertical>
-              <samples>200</samples>
+              <samples>300</samples>
               <resolution>1</resolution>
-              <min_angle>-1.57</min_angle>
-              <max_angle>1.57</max_angle>
+              <min_angle>-1.6</min_angle>
+              <max_angle>1.6</max_angle>
             </vertical>
           </scan>
           <range>
-            <min>0</min>
-            <max>100</max>
-            <resolution>1</resolution>
+            <min>0.1</min>
+            <max>10</max>
           </range>
-          <noise>
-            <mean>0</mean>
-            <stddev>0</stddev>
-          </noise>
         </ray>
-        <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
-          <topicName>/laser/scan</topicName>
+        <plugin name='sensor' filename='libgazebo_ros_block_laser.so'>
+          <robotNamespace>controller</robotNamespace>
+          <topicName>point_cloud</topicName>
           <frameName>sensors</frameName>
+          <gaussianNoise>0.00</gaussianNoise>
+          <updateRate>20</updateRate>
+          <hokuyoMinIntensity>101</hokuyoMinIntensity>
         </plugin>
       </sensor>
       <self_collide>0</self_collide>
@@ -2176,7 +2174,7 @@
     <joint name='sensor_joint' type='fixed'>
       <parent>rack</parent>
       <child>sensors</child>
-      <pose>0 0 0 0 -0 0</pose>
+      <pose>0 0 0 0 0 0</pose>
       <physics>
         <ode>
           <limit>
@@ -2190,6 +2188,8 @@
         </ode>
       </physics>
     </joint>
+    <plugin name='controller' filename='libcontrol.so'>
+    </plugin>
     <static>0</static>
     <allow_auto_disable>1</allow_auto_disable>
   </model>

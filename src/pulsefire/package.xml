@@ -42,6 +42,8 @@
   <depend>roscpp</depend>
   <depend>gazebo_ros</depend>
   <depend>gazebo_plugins</depend>
+  <depend>laser_geometry</depend>
+  <depend>octomap</depend>
   <!--   <build_export_depend>message_generation</build_export_depend> -->
   <!-- Use buildtool_depend for build tool packages: -->
   <!--   <buildtool_depend>catkin</buildtool_depend> -->

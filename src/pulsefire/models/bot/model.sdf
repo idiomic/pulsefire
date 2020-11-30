@@ -1996,7 +1996,7 @@
             <far>100</far>
           </clip>
         </camera>
-        <plugin name="pulsefire" filename="libpulsefire.so">
+        <plugin name="pulsefire" filename="libvisual.so">
          <cameraName>camera</cameraName>
          <alwaysOn>true</alwaysOn>
          <updateRate>10</updateRate>

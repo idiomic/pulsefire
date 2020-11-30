@@ -17,4 +17,5 @@ include_directories( ${catkin_INCLUDE_DIRS}
 )
 
 add_library(visual stereo_visual_depth.cpp)
+
 target_link_libraries(visual ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES})
