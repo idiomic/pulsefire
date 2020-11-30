@@ -1955,7 +1955,7 @@
       </collision>
     </link>
     <link name='sensors'>
-      <pose>-0.104455 -0.001528 0.306312 3.14 -0 3.14</pose>
+      <pose>-0.104455 -0.001528 0.306312 3.14 3.14 3.14</pose>
       <inertial>
         <mass>0.0921352</mass>
         <inertia>
@@ -1983,11 +1983,11 @@
               <samples>300</samples>
               <resolution>1</resolution>
               <min_angle>-1.6</min_angle>
-              <max_angle>1.6</max_angle>
+              <max_angle>0</max_angle>
             </vertical>
           </scan>
           <range>
-            <min>0.1</min>
+            <min>0.2</min>
             <max>10</max>
           </range>
         </ray>
