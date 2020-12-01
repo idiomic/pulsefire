@@ -26,8 +26,23 @@ namespace gazebo {
       octomap::OcTree map;
       physics::ModelPtr model;
       physics::LinkPtr sensor;
+      physics::JointPtr left_axel;
+      physics::JointPtr right_axel;
       event::ConnectionPtr con;
       ros::NodeHandle node;
       ros::Subscriber sub;
+
+      octomap::point3d target;
+      bool is_target_goal = false;
+      bool found_goal = false;
+
+      octomap::pose6d GetPose();
+
+      void MoveForward();
+      void Navigate();
+      void UpdateFringe(octomap::point3d);
+      bool IsTargetStillFringe();
+      void UpdateTarget();
+      void GoToGoal();
   };
 }
