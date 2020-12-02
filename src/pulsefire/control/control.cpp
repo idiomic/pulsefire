@@ -121,7 +121,7 @@ namespace gazebo {
       if (pow2(q.x()) + pow2(q.y()) > pow2(0.3))
       octomap_cloud.push_back(q);
     }
-    map.insertPointCloud(octomap_cloud, octomap::point3d(0,0,0), pose, 9);
+    map.insertPointCloud(octomap_cloud, octomap::point3d(0,0,0), pose, 90);
 
     map.prune();
 

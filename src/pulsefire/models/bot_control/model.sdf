@@ -1974,20 +1974,20 @@
         <ray>
           <scan>
             <horizontal>
-              <samples>100</samples>
+              <samples>200</samples>
               <resolution>1</resolution>
               <min_angle>-1.6</min_angle>
               <max_angle>1.6</max_angle>
             </horizontal>
             <vertical>
-              <samples>100</samples>
+              <samples>200</samples>
               <resolution>1</resolution>
               <min_angle>-1.6</min_angle>
               <max_angle>0</max_angle>
             </vertical>
           </scan>
           <range>
-            <min>0.3</min>
+            <min>0.25</min>
             <max>100</max>
           </range>
         </ray>
