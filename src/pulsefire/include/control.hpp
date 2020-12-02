@@ -10,8 +10,10 @@
 #include <sensor_msgs/PointCloud.h>
 #include <tf2_ros/buffer.h>
 #include <tf2_ros/transform_listener.h>
+#include "tf2_ros/transform_broadcaster.h"
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <octomap/octomap.h>
+#include "path.hpp"
 
 namespace gazebo {
   class ControlPlugin : public ModelPlugin {
@@ -23,6 +25,10 @@ namespace gazebo {
       void OnLaserScan(const sensor_msgs::PointCloud& cloud);
 
     protected:
+      tf2_ros::Buffer tfbuff;
+      tf2_ros::TransformListener tflistener;
+      tf2_ros::TransformBroadcaster tfbroadcaster;
+
       octomap::OcTree map;
       physics::ModelPtr model;
       physics::LinkPtr sensor;
@@ -31,8 +37,10 @@ namespace gazebo {
       event::ConnectionPtr con;
       ros::NodeHandle node;
       ros::Subscriber sub;
+      PathState floor_state;
+      octomap::pose6d init_pose;
 
-      octomap::point3d target;
+      PathNode* target = nullptr;
       bool is_target_goal = false;
       bool found_goal = false;
 
@@ -41,7 +49,6 @@ namespace gazebo {
       void MoveForward();
       void Navigate();
       void UpdateFringe(octomap::point3d);
-      bool IsTargetStillFringe();
       void UpdateTarget();
       void GoToGoal();
   };
