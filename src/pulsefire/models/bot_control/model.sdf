@@ -1982,22 +1982,21 @@
             <vertical>
               <samples>200</samples>
               <resolution>1</resolution>
-              <min_angle>-1.6</min_angle>
+              <min_angle>-1</min_angle>
               <max_angle>0</max_angle>
             </vertical>
           </scan>
           <range>
-            <min>0.25</min>
+            <min>0.5</min>
             <max>100</max>
           </range>
         </ray>
-        <plugin name='sensor' filename='libgazebo_ros_block_laser.so'>
-          <robotNamespace>controller</robotNamespace>
-          <topicName>point_cloud</topicName>
+        <plugin name='sensor' filename='libgazebo_ros_velodyne_laser.so'>
+          <robotNamespace></robotNamespace>
+          <topicName>cloud_in</topicName>
           <frameName>sensors</frameName>
           <gaussianNoise>0.00</gaussianNoise>
           <updateRate>20</updateRate>
-          <hokuyoMinIntensity>101</hokuyoMinIntensity>
         </plugin>
       </sensor>
       <self_collide>0</self_collide>
