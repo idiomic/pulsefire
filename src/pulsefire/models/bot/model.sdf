@@ -2204,6 +2204,8 @@
         </ode>
       </physics>
     </joint>
+    <plugin name='controller' filename='libcontrol.so'>
+    </plugin>
     <static>0</static>
     <allow_auto_disable>1</allow_auto_disable>
   </model>

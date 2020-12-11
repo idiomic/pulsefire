@@ -3,6 +3,80 @@
 
   <env name="GAZEBO_MODEL_PATH" value="$(find pulsefire)/models"/>
 
+  <node name="map_server" pkg="octomap_server" type="octomap_server_node" output="screen">
+    <param name="frame_id" type="string" value="map" />
+    <param name="resolution" type="double" value="0.05" />
+    <param name="base_frame_id" type="string" value="bot" />
+    <param name="occupancy_min_z" type="double" value="0.1" />
+    <remap from="/projected_map" to="/map"/>
+  </node>
+
+  <node pkg="pulsefire" type="point_cloud_sub.py" name="point_cloud_sub" output="screen">
+  </node>
+
+  <node pkg="point_cloud_converter" name="point_cloud_converter" type="point_cloud_converter_node" >
+    <remap from="points_in" to="/points_in"/>
+    <remap from="points2_out" to="/cloud_in" />
+    <!--
+    <remap from="points2_in" to="/cloud_in"/>
+    <remap from="points_out" to="/points_in" />
+    -->
+  </node>
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen">
+    <param name="footprint_padding" value="0.01" />
+    <param name="controller_frequency" value="5.0" />
+    <param name="controller_patience" value="3.0" />
+    <param name="oscillation_timeout" value="30.0" />
+    <param name="oscillation_distance" value="0.5" />
+    <param name="planner_patience" value="1" />
+    <param name="controller_patience" value="1" />
+    <param name="recovery_behavior_enabled" value="false" />
+    <rosparam file="$(find pulsefire)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find pulsefire)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find pulsefire)/param/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find pulsefire)/param/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find pulsefire)/param/base_local_planner_params.yaml" command="load" />
+    <param name="local_costmap/obstacle_layer/point_cloud_sensor/topic" value="/points_in"/>
+  </node>
+
+  <node pkg="rrt_exploration" type="global_rrt_detector" name="global_detector" output="screen">
+    <param name="eta" value="0.5"/>
+    <param name="map_topic" value="/map"/>
+  </node>
+  
+  <node pkg="rrt_exploration" type="local_rrt_detector" name="local_detector" output="screen">
+    <param name="eta" value="$0.5"/>
+    <param name="map_topic" value="/map"/>
+    <param name="robot_frame" value="sensors"/>
+  </node>
+
+  <node pkg="rrt_exploration" type="filter.py" name="filter" output="screen">
+    <param name="map_topic" value="/map"/>
+    <param name="info_radius" value="1"/> 
+    <param name="costmap_clearing_threshold" value="70"/> 
+    <param name="goals_topic" value="/detected_points"/>
+    <param name="namespace" value=""/> 
+    <param name="n_robots" value="1"/>
+    <param name="rate" value="100"/>
+    <param name="robot_frame" value="sensors"/>
+  </node>
+  
+  <node pkg="rrt_exploration" type="assigner.py" name="assigner" output="screen">
+    <param name="map_topic" value="/map"/>
+    <param name="global_frame" value="map"/>
+    <param name="robot_frame" value="sensors"/>
+    <param name="info_radius" value="1"/> 
+    <param name="info_multiplier" value="3.0"/> 
+    <param name="hysteresis_radius" value="3.0"/> 
+    <param name="hysteresis_gain" value="2.0"/> 
+    <param name="frontiers_topic" value="/filtered_points"/> 
+    <param name="n_robots" value="1"/>
+    <param name="namespace" value=""/>
+    <param name="delay_after_assignement" value="0.5"/>
+    <param name="rate" value="100"/>
+  </node>
+
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="$(find pulsefire)/worlds/default.world"/>
     <arg name="paused" value="false"/>

@@ -17,6 +17,10 @@
 #include <octomap/octomap.h>
 #include "path.hpp"
 #include <std_srvs/Empty.h>
+#include <geometry_msgs/Twist.h>
+#include <eigen3/Eigen/Dense>
+
+using namespace Eigen;
 
 namespace gazebo {
   class ControlPlugin : public ModelPlugin {
@@ -27,7 +31,8 @@ namespace gazebo {
       void OnUpdate();
 
       bool GetMap(nav_msgs::GetMap::Request& req, nav_msgs::GetMap::Response& res);
-      void SetMap(const nav_msgs::OccupancyGrid::ConstPtr& map);
+      void SetMap(const nav_msgs::OccupancyGrid::ConstPtr map);
+      void Move(const geometry_msgs::Twist& twist);
 
     protected:
       tf2_ros::TransformBroadcaster tfbroadcaster;
@@ -38,9 +43,15 @@ namespace gazebo {
       event::ConnectionPtr con;
       ros::NodeHandle node;
       ros::Subscriber sub;
+      ros::Subscriber control;
       ros::ServiceServer server;
 
       nav_msgs::OccupancyGrid::ConstPtr map;
+
+      float r = 0.033;
+      float l = 0.26;
+      Matrix<float, 2, 2> M;
+      Matrix<float, 2, 2> M_inv;
 
       unsigned seq = 0;
       ros::Time last;

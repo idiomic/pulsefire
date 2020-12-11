@@ -1,27 +1,5 @@
 #include "control.hpp"
 #include <iostream>
-#include <fstream>
-#include <string>
-#include <boost/function.hpp>
-
-#define _USE_MATH_DEFINES
-#include <math.h>
-
-#define DEBUG
-
-const std::string map_name("/map");
-
-using std::ofstream;
-
-template<typename T>
-static inline constexpr T pow2(const T& v) {
-  return v * v;
-}
-
-template<typename T>
-static inline constexpr T dist2(const T& x, const T& y, const T& z) {
-  return pow2(x) + pow2(y) + pow2(z);
-}
 
 namespace gazebo {
 
@@ -29,14 +7,16 @@ namespace gazebo {
 
   ControlPlugin::ControlPlugin() :
     node("controller"),
-    sub(node.subscribe(map_name, 10, &ControlPlugin::SetMap, this)),
+    sub(node.subscribe("/map", 10, &ControlPlugin::SetMap, this)),
+    control(node.subscribe("/cmd_vel", 10, &ControlPlugin::Move, this)),
     server(node.advertiseService("/map", &ControlPlugin::GetMap, this))
-  {}
+  {
+    M << r/2, r/2, -r/l, r/l;
+    M_inv = M.inverse();
+  }
 
   ControlPlugin::~ControlPlugin()
-  {
-    ROS_INFO("Unloaded Control Model Plugin");
-  }
+  {}
 
   void ControlPlugin::Load(physics::ModelPtr parent, sdf::ElementPtr sdf)
   {
@@ -47,6 +27,8 @@ namespace gazebo {
       std::bind(&ControlPlugin::OnUpdate, this));
     this->left_axel = parent->GetJoint("left_wheel_joint");
     this->right_axel = parent->GetJoint("right_wheel_joint");
+    this->left_axel->SetVelocity(0, -24*M_PI);
+    this->right_axel->SetVelocity(0, 0);
   }
 
   void ControlPlugin::OnUpdate()
@@ -61,12 +43,26 @@ namespace gazebo {
     seq++;
   }
 
-  void ControlPlugin::SetMap(const nav_msgs::OccupancyGrid::ConstPtr& map) {
+  void ControlPlugin::SetMap(const nav_msgs::OccupancyGrid::ConstPtr map) {
     this->map = map;
   }
 
   bool ControlPlugin::GetMap(nav_msgs::GetMap::Request& req, nav_msgs::GetMap::Response& res) {
+    printf("Get Map\n");
     res.map = *map;
     return true;
+  }
+
+  void ControlPlugin::Move(const geometry_msgs::Twist& twist) {
+    Vector2f d;
+    d << twist.linear.x, twist.angular.z;
+    Vector2f v = M_inv * d;
+    if (twist.linear.x > 0) {
+      this->left_axel->SetVelocity(0, -v(1));
+      this->right_axel->SetVelocity(0, -v(0));
+    } else {
+      this->left_axel->SetVelocity(0, v(1));
+      this->right_axel->SetVelocity(0, v(0));
+    }
   }
 }

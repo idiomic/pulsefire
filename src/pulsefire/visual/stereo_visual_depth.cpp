@@ -31,14 +31,12 @@ namespace gazebo {
   void StereoVisualDepth::OnNewFrameLeft(const unsigned char *_image,
     unsigned int _width, unsigned int _height, unsigned int _depth,
     const std::string &_format) {
-    ROS_INFO("OnNewFrameLeft:\n");
     OnNewFrame(_image, this->utils[0]);
   }
 
   void StereoVisualDepth::OnNewFrameRight(const unsigned char *_image,
     unsigned int _width, unsigned int _height, unsigned int _depth,
     const std::string &_format) {
-    ROS_INFO("OnNewFrameRight:\n");
     OnNewFrame(_image, this->utils[1]);
   }
 }
