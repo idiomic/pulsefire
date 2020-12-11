@@ -1970,7 +1970,7 @@
       </inertial>
       <sensor name='camera' type='multicamera'>
         <always_on>1</always_on>
-        <update_rate>30</update_rate>
+        <update_rate>20</update_rate>
         <visualize>0</visualize>
         <camera name='left'>
           <pose>0 0.2 0 0 -0 0</pose>
@@ -2005,7 +2005,7 @@
          <pointCloudTopicName>depth/points</pointCloudTopicName>
          <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
          <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
-         <frameName>camera_depth_optical_frame</frameName>
+         <frameName>sensors</frameName>
          <baseline>0.1</baseline>
          <distortion_k1>0.0</distortion_k1>
          <distortion_k2>0.0</distortion_k2>

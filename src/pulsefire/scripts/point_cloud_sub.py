@@ -60,7 +60,7 @@ def image_callback(image_l, image_r):
     # cv.waitKey()
 
     header = std_msgs.msg.Header()
-    header.stamp = rospy.get_rostime()
+    header.stamp = image_l.header.stamp
     header.frame_id = 'map'
     msg.header = header
     
@@ -84,7 +84,6 @@ def main():
     msg = PointCloud()
 
     pub = rospy.Publisher('/points_in', PointCloud, queue_size=10)
-    rate = rospy.Rate(10)
 
     left = message_filters.Subscriber('/camera/left/rgb/image_raw', Image)
     right = message_filters.Subscriber('/camera/right/rgb/image_raw', Image)
