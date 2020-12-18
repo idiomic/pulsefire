@@ -19,5 +19,5 @@ include_directories( ${catkin_INCLUDE_DIRS}
                      ${OCTOMAP_INCLUDE_DIRS}
 )
 
-add_library(control control.cpp path.cpp)
+add_library(control control.cpp)
 target_link_libraries(control ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES} ${OCTOMAP_LIBRARIES})

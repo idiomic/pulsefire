@@ -1982,7 +1982,7 @@
             <vertical>
               <samples>200</samples>
               <resolution>1</resolution>
-              <min_angle>-1</min_angle>
+              <min_angle>-0.8</min_angle>
               <max_angle>0</max_angle>
             </vertical>
           </scan>
@@ -2190,6 +2190,7 @@
     <plugin name='controller' filename='libcontrol.so'>
     </plugin>
     <static>0</static>
-    <allow_auto_disable>1</allow_auto_disable>
+    <self_collide>0</self_collide>
+    <allow_auto_disable>0</allow_auto_disable>
   </model>
 </sdf>

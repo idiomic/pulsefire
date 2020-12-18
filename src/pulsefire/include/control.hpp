@@ -15,26 +15,30 @@
 #include "tf2_ros/transform_broadcaster.h"
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <octomap/octomap.h>
-#include "path.hpp"
 #include <std_srvs/Empty.h>
 #include <geometry_msgs/Twist.h>
 #include <eigen3/Eigen/Dense>
+#include <cmath>
+#include <algorithm>
+#include "minheap.hpp"
+#include <vector>
 
 using namespace Eigen;
 
 namespace gazebo {
+
   class ControlPlugin : public ModelPlugin {
     public:
       ControlPlugin();
       ~ControlPlugin();
       void Load(physics::ModelPtr parent, sdf::ElementPtr sdf);
       void OnUpdate();
-
-      bool GetMap(nav_msgs::GetMap::Request& req, nav_msgs::GetMap::Response& res);
       void SetMap(const nav_msgs::OccupancyGrid::ConstPtr map);
-      void Move(const geometry_msgs::Twist& twist);
+      void SetGoal(geometry_msgs::PoseStamped goal);
 
     protected:
+      float d2(const Node* n);
+
       tf2_ros::TransformBroadcaster tfbroadcaster;
       physics::ModelPtr model;
       physics::LinkPtr sensor;
@@ -43,7 +47,7 @@ namespace gazebo {
       event::ConnectionPtr con;
       ros::NodeHandle node;
       ros::Subscriber sub;
-      ros::Subscriber control;
+      ros::Subscriber update_goal;
       ros::ServiceServer server;
 
       nav_msgs::OccupancyGrid::ConstPtr map;
@@ -52,6 +56,10 @@ namespace gazebo {
       float l = 0.26;
       Matrix<float, 2, 2> M;
       Matrix<float, 2, 2> M_inv;
+
+      Node goal;
+      std::vector<Vector2f> points;
+      int cur_p = 0;
 
       unsigned seq = 0;
       ros::Time last;
